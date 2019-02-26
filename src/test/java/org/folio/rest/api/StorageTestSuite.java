@@ -148,7 +148,7 @@ public class StorageTestSuite {
       client.delete(rootUrl, TENANT_ID,
         ResponseHandler.any(deleteAllFinished));
 
-      Response response = deleteAllFinished.get(5, TimeUnit.SECONDS);
+      Response response = deleteAllFinished.get(10, TimeUnit.SECONDS);
 
       if(response.getStatusCode() != 204) {
         Assert.fail("Delete all preparation failed: " +
@@ -228,7 +228,7 @@ public class StorageTestSuite {
     HttpClient client = new HttpClient(vertx);
 
     JsonArray ar = new JsonArray();
-    ar.add(new JsonObject().put("key", "loadReference").put("value", "true"));
+    ar.add(new JsonObject().put("key", "loadReference").put("value", "false"));
 
     JsonObject jo = new JsonObject();
     jo.put("parameters", ar);
@@ -237,7 +237,7 @@ public class StorageTestSuite {
     client.post(storageUrl("/_/tenant"), jo, tenantId,
       ResponseHandler.any(tenantPrepared));
 
-    Response response = tenantPrepared.get(30, TimeUnit.SECONDS);
+    Response response = tenantPrepared.get(60, TimeUnit.SECONDS);
 
     String failureMessage = String.format("Tenant init failed: %s: %s",
       response.getStatusCode(), response.getBody());
