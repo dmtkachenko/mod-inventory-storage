@@ -14,11 +14,13 @@ types:
   marcJson: !include marc.json
   instanceRelationship: !include instancerelationship.json
   instanceRelationships: !include instancerelationships.json
+  errors: !include raml-util/schemas/errors.schema
 
 traits:
   language: !include raml-util/traits/language.raml
   pageable: !include raml-util/traits/pageable.raml
   searchable: !include raml-util/traits/searchable.raml
+  validate: !include raml-util/traits/validation.raml
 
 resourceTypes:
   collection: !include raml-util/rtypes/collection.raml
@@ -67,6 +69,7 @@ resourceTypes:
                         example: "title=\"*uproot*\""},
           ]
     post:
+      is: [validate]
     delete:
       is: [language]
       responses:

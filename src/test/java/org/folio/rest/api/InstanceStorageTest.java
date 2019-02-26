@@ -150,6 +150,34 @@ public class InstanceStorageTest extends TestBase {
   }
 
   @Test
+  public void cannotCreateAnInstanceWithInvalidEditions()
+    throws MalformedURLException,
+    InterruptedException,
+    ExecutionException,
+    TimeoutException {
+
+    UUID id = UUID.randomUUID();
+
+    JsonObject instanceToCreate = new JsonObject();
+
+    instanceToCreate.put("id", id.toString());
+    instanceToCreate.put("title", "Long Way to a Small Angry Planet");
+    instanceToCreate.put("source", "TEST");
+    instanceToCreate.put("instanceTypeId", UUID.randomUUID().toString());
+    instanceToCreate.put("editions", new JsonObject());
+
+    CompletableFuture<Response> createCompleted = new CompletableFuture<>();
+
+    client.post(instancesStorageUrl(""), instanceToCreate, StorageTestSuite.TENANT_ID,
+      ResponseHandler.json(createCompleted));
+
+    Response response = createCompleted.get(5, TimeUnit.SECONDS);
+
+    assertThat(String.format("Not created: %s", response.getBody()),
+      response.getStatusCode(), is(AdditionalHttpStatusCodes.UNPROCESSABLE_ENTITY));
+  }
+
+  @Test
   public void canCreateAnInstanceWithoutProvidingID()
     throws MalformedURLException,
     InterruptedException,
